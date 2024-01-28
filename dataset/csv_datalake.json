@@ -1,0 +1,44 @@
+{
+	"name": "csv_datalake",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "AzureBlobStorageRawData",
+			"type": "LinkedServiceReference"
+		},
+		"parameters": {
+			"conteiner": {
+				"type": "string"
+			},
+			"nomearquivo": {
+				"type": "string"
+			},
+			"extensao": {
+				"type": "string"
+			}
+		},
+		"folder": {
+			"name": "Dados_internos"
+		},
+		"annotations": [],
+		"type": "DelimitedText",
+		"typeProperties": {
+			"location": {
+				"type": "AzureBlobStorageLocation",
+				"fileName": {
+					"value": "@concat(\n    \ndataset().nomearquivo,\n\nformatDateTime(utcnow(), 'yyyyMMdd'),\n\ndataset().extensao\n\n)",
+					"type": "Expression"
+				},
+				"container": {
+					"value": "@dataset().conteiner",
+					"type": "Expression"
+				}
+			},
+			"columnDelimiter": ";",
+			"escapeChar": "\\",
+			"firstRowAsHeader": true,
+			"quoteChar": "\""
+		},
+		"schema": []
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}

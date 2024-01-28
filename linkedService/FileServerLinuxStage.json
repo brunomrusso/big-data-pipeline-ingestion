@@ -1,0 +1,17 @@
+{
+	"name": "FileServerLinuxStage",
+	"type": "Microsoft.DataFactory/factories/linkedservices",
+	"properties": {
+		"annotations": [],
+		"type": "FileServer",
+		"typeProperties": {
+			"host": "\\\\192.168.242.128\\stage\\",
+			"userId": "runbrunorun",
+			"encryptedCredential": "eyJDcmVkZW50aWFsSWQiOiI1NDFlNWViNy1iOThjLTRkYTQtOGQ4Ni01ZGQzYzM0MmMxYWEiLCJWZXJzaW9uIjoiMi4wIiwiQ2xhc3NUeXBlIjoiTWljcm9zb2Z0LkRhdGFQcm94eS5Db3JlLkludGVyU2VydmljZURhdGFDb250cmFjdC5DcmVkZW50aWFsU1UwNkNZMTQifQ=="
+		},
+		"connectVia": {
+			"referenceName": "integrationRuntimeOnPremises",
+			"type": "IntegrationRuntimeReference"
+		}
+	}
+}

@@ -1,0 +1,17 @@
+{
+	"name": "ingestion_csv_raw_to_bronze_parquet",
+	"type": "Microsoft.DataFactory/factories/linkedservices",
+	"properties": {
+		"annotations": [],
+		"type": "AzureDatabricks",
+		"typeProperties": {
+			"domain": "https://adb-5280320334245005.5.azuredatabricks.net",
+			"existingClusterId": "0125-225657-3g9eupwb",
+			"encryptedCredential": "eyJDcmVkZW50aWFsSWQiOiI5NDBjM2ZhMS1kZTM4LTRhZmEtOTZlYS0yMjMzYTNhMWRjNDciLCJWZXJzaW9uIjoiMi4wIiwiQ2xhc3NUeXBlIjoiTWljcm9zb2Z0LkRhdGFQcm94eS5Db3JlLkludGVyU2VydmljZURhdGFDb250cmFjdC5DcmVkZW50aWFsU1UwNkNZMTQifQ=="
+		},
+		"connectVia": {
+			"referenceName": "integrationRuntimeOnPremises",
+			"type": "IntegrationRuntimeReference"
+		}
+	}
+}

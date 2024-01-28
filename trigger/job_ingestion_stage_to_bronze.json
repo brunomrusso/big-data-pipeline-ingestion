@@ -1,0 +1,24 @@
+{
+	"name": "job_ingestion_stage_to_bronze",
+	"properties": {
+		"annotations": [],
+		"runtimeState": "Stopped",
+		"pipelines": [
+			{
+				"pipelineReference": {
+					"referenceName": "pipeline_linux_to_adls_raw",
+					"type": "PipelineReference"
+				}
+			}
+		],
+		"type": "ScheduleTrigger",
+		"typeProperties": {
+			"recurrence": {
+				"frequency": "Minute",
+				"interval": 30,
+				"startTime": "2024-01-26T09:30:00",
+				"timeZone": "E. South America Standard Time"
+			}
+		}
+	}
+}

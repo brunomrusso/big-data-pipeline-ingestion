@@ -1,0 +1,17 @@
+{
+	"name": "datafactory-dev-ingestion",
+	"properties": {
+		"globalConfigurations": {
+			"PipelineBillingEnabled": "true",
+			"factoryStagingLSReferenceName": "AzureBlobStorageRawData",
+			"factoryStagingLSType": "LinkedServiceReference",
+			"factoryStagingFolderPath": "raw-data"
+		}
+	},
+	"location": "brazilsouth",
+	"identity": {
+		"type": "SystemAssigned",
+		"principalId": "75669186-dccb-4ccc-927c-30c5e6256763",
+		"tenantId": "4fdc335a-f7ec-4d02-91f8-ac42ea09fd33"
+	}
+}

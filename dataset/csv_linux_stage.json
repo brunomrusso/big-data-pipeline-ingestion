@@ -1,0 +1,29 @@
+{
+	"name": "csv_linux_stage",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "FileServerLinuxStage",
+			"type": "LinkedServiceReference"
+		},
+		"folder": {
+			"name": "Dados_externos"
+		},
+		"annotations": [],
+		"type": "DelimitedText",
+		"typeProperties": {
+			"location": {
+				"type": "FileServerLocation",
+				"fileName": {
+					"value": "@concat(\n\n'EFIN_RETIF_R4010_',\n\nformatDateTime(utcnow(), 'yyyyMMdd'),\n\n'.csv'\n\n    )",
+					"type": "Expression"
+				}
+			},
+			"columnDelimiter": ";",
+			"escapeChar": "\\",
+			"firstRowAsHeader": true,
+			"quoteChar": "\""
+		},
+		"schema": []
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}

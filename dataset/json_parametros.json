@@ -1,0 +1,41 @@
+{
+	"name": "json_parametros",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "AzureBlobStorageRawData",
+			"type": "LinkedServiceReference"
+		},
+		"folder": {
+			"name": "Dados_internos"
+		},
+		"annotations": [],
+		"type": "Json",
+		"typeProperties": {
+			"location": {
+				"type": "AzureBlobStorageLocation",
+				"fileName": "parametros_extracao.json",
+				"container": "config"
+			}
+		},
+		"schema": {
+			"type": "object",
+			"properties": {
+				"parametros": {
+					"type": "object",
+					"properties": {
+						"container": {
+							"type": "string"
+						},
+						"diretorio": {
+							"type": "string"
+						},
+						"nomearquivo": {
+							"type": "string"
+						}
+					}
+				}
+			}
+		}
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}

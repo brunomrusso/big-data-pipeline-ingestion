@@ -1,0 +1,158 @@
+{
+	"name": "pipeline_linux_to_adls_raw",
+	"properties": {
+		"activities": [
+			{
+				"name": "copy_file_stage_to_raw_data",
+				"description": "Copiando arquivo .csv do servidor Linux (stage) para o Data Lake camada Raw",
+				"type": "Copy",
+				"dependsOn": [
+					{
+						"activity": "lookup_parameters",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "1.00:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"source": {
+						"type": "DelimitedTextSource",
+						"storeSettings": {
+							"type": "FileServerReadSettings",
+							"recursive": true,
+							"enablePartitionDiscovery": false
+						},
+						"formatSettings": {
+							"type": "DelimitedTextReadSettings"
+						}
+					},
+					"sink": {
+						"type": "DelimitedTextSink",
+						"storeSettings": {
+							"type": "AzureBlobStorageWriteSettings"
+						},
+						"formatSettings": {
+							"type": "DelimitedTextWriteSettings",
+							"quoteAllText": true,
+							"fileExtension": ".txt"
+						}
+					},
+					"enableStaging": false,
+					"translator": {
+						"type": "TabularTranslator",
+						"typeConversion": true,
+						"typeConversionSettings": {
+							"allowDataTruncation": true,
+							"treatBooleanAsNumber": false
+						}
+					}
+				},
+				"inputs": [
+					{
+						"referenceName": "csv_linux_stage",
+						"type": "DatasetReference"
+					}
+				],
+				"outputs": [
+					{
+						"referenceName": "csv_datalake",
+						"type": "DatasetReference",
+						"parameters": {
+							"conteiner": {
+								"value": "@activity('lookup_parameters').output.firstRow.parametros.conteiner",
+								"type": "Expression"
+							},
+							"nomearquivo": {
+								"value": "@activity('lookup_parameters').output.firstRow.parametros.nomearquivo",
+								"type": "Expression"
+							},
+							"extensao": {
+								"value": "@activity('lookup_parameters').output.firstRow.parametros.extensao",
+								"type": "Expression"
+							}
+						}
+					}
+				]
+			},
+			{
+				"name": "lookup_parameters",
+				"description": "Leitura de arquivo de parâmetros com variáveis que serão utilizadas no pipeline",
+				"type": "Lookup",
+				"dependsOn": [],
+				"policy": {
+					"timeout": "1.00:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"source": {
+						"type": "JsonSource",
+						"storeSettings": {
+							"type": "AzureBlobStorageReadSettings",
+							"recursive": true,
+							"enablePartitionDiscovery": false
+						},
+						"formatSettings": {
+							"type": "JsonReadSettings"
+						}
+					},
+					"dataset": {
+						"referenceName": "json_parametros",
+						"type": "DatasetReference"
+					}
+				}
+			},
+			{
+				"name": "csv_raw_to_bronze",
+				"description": "Ingestão arquivo .csv da camada Raw para a camada Bronze no formato delta",
+				"type": "DatabricksNotebook",
+				"dependsOn": [
+					{
+						"activity": "copy_file_stage_to_raw_data",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "1.00:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"notebookPath": "/Users/brunopiuu@hotmail.com/ingest_cvs_raw_to_bronze",
+					"baseParameters": {
+						"odate": {
+							"value": "@formatDateTime(utcnow(), 'yyyyMMdd')",
+							"type": "Expression"
+						}
+					}
+				},
+				"linkedServiceName": {
+					"referenceName": "ingestion_csv_raw_to_bronze_parquet",
+					"type": "LinkedServiceReference"
+				}
+			}
+		],
+		"folder": {
+			"name": "ingestao_raw_data"
+		},
+		"annotations": [],
+		"lastPublishTime": "2024-01-26T22:56:24Z"
+	},
+	"type": "Microsoft.DataFactory/factories/pipelines"
+}
