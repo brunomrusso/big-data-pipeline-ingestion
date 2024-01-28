@@ -1,0 +1,91 @@
+{
+	"$schema": "http://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+	"contentVersion": "1.0.0.0",
+	"parameters": {
+		"factoryName": {
+			"type": "string",
+			"metadata": "Data Factory name",
+			"defaultValue": "datafactory-dev-ingestion"
+		},
+		"AzureBlobStorageRawData_connectionString": {
+			"type": "secureString",
+			"metadata": "Secure string for 'connectionString' of 'AzureBlobStorageRawData'"
+		},
+		"FileServerLinuxStage_password": {
+			"type": "secureString",
+			"metadata": "Secure string for 'password' of 'FileServerLinuxStage'"
+		},
+		"ingestion_csv_raw_to_bronze_parquet_accessToken": {
+			"type": "secureString",
+			"metadata": "Secure string for 'accessToken' of 'ingestion_csv_raw_to_bronze_parquet'"
+		},
+		"FileServerLinuxStage_properties_typeProperties_host": {
+			"type": "string",
+			"defaultValue": "\\\\192.168.242.128\\stage\\"
+		},
+		"FileServerLinuxStage_properties_typeProperties_userId": {
+			"type": "string",
+			"defaultValue": "runbrunorun"
+		},
+		"HttpServer1_properties_typeProperties_url": {
+			"type": "string",
+			"defaultValue": "https://www.gov.br/anp/pt-br/centrais-de-conteudo/dados-abertos/arquivos/arquivos-dados-cadastrais-dos-revendedores-varejistas-de-combustiveis-automotivos/dados-cadastrais-revendedores-varejistas-combustiveis-automoveis.csv"
+		},
+		"ingestion_csv_raw_to_bronze_parquet_properties_typeProperties_existingClusterId": {
+			"type": "string",
+			"defaultValue": "0125-225657-3g9eupwb"
+		},
+		"containerUri": {
+			"type": "string",
+			"metadata": "URI to storage account containing linked ARM templates"
+		},
+		"containerSasToken": {
+			"type": "string",
+			"metadata": "Sas token to storage account containing linked ARM templates"
+		}
+	},
+	"variables": {
+		"factoryId": "[concat('Microsoft.DataFactory/factories/', parameters('factoryName'))]"
+	},
+	"resources": [
+		{
+			"name": "datafactory-dev-ingestion_ArmTemplate_0",
+			"type": "Microsoft.Resources/deployments",
+			"apiVersion": "2018-02-01",
+			"properties": {
+				"mode": "incremental",
+				"templateLink": {
+					"uri": "[concat(parameters('containerUri'), '/ArmTemplate_0.json', parameters('containerSasToken'))]",
+					"contentVersion": "1.0.0.0"
+				},
+				"parameters": {
+					"factoryName": {
+						"value": "[parameters('factoryName')]"
+					},
+					"AzureBlobStorageRawData_connectionString": {
+						"value": "[parameters('AzureBlobStorageRawData_connectionString')]"
+					},
+					"FileServerLinuxStage_password": {
+						"value": "[parameters('FileServerLinuxStage_password')]"
+					},
+					"ingestion_csv_raw_to_bronze_parquet_accessToken": {
+						"value": "[parameters('ingestion_csv_raw_to_bronze_parquet_accessToken')]"
+					},
+					"HttpServer1_properties_typeProperties_url": {
+						"value": "[parameters('HttpServer1_properties_typeProperties_url')]"
+					},
+					"FileServerLinuxStage_properties_typeProperties_host": {
+						"value": "[parameters('FileServerLinuxStage_properties_typeProperties_host')]"
+					},
+					"FileServerLinuxStage_properties_typeProperties_userId": {
+						"value": "[parameters('FileServerLinuxStage_properties_typeProperties_userId')]"
+					},
+					"ingestion_csv_raw_to_bronze_parquet_properties_typeProperties_existingClusterId": {
+						"value": "[parameters('ingestion_csv_raw_to_bronze_parquet_properties_typeProperties_existingClusterId')]"
+					}
+				}
+			},
+			"dependsOn": []
+		}
+	]
+}
