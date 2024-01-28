@@ -1,0 +1,308 @@
+{
+	"$schema": "http://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+	"contentVersion": "1.0.0.0",
+	"parameters": {
+		"factoryName": {
+			"type": "string",
+			"metadata": "Data Factory name"
+		},
+		"ingestion_csv_raw_to_bronze_parquet": {
+			"type": "string"
+		},
+		"FileServerLinuxStage": {
+			"type": "string"
+		},
+		"AzureBlobStorageRawData": {
+			"type": "string"
+		}
+	},
+	"variables": {
+		"factoryId": "[concat('Microsoft.DataFactory/factories/', parameters('factoryName'))]"
+	},
+	"resources": [
+		{
+			"name": "[concat(parameters('factoryName'), '/pipeline_linux_to_adls_raw')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"activities": [
+					{
+						"name": "copy_file_stage_to_raw_data",
+						"description": "Copiando arquivo .csv do servidor Linux (stage) para o Data Lake camada Raw",
+						"type": "Copy",
+						"dependsOn": [
+							{
+								"activity": "lookup_parameters",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"policy": {
+							"timeout": "1.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"source": {
+								"type": "DelimitedTextSource",
+								"storeSettings": {
+									"type": "FileServerReadSettings",
+									"recursive": true,
+									"enablePartitionDiscovery": false
+								},
+								"formatSettings": {
+									"type": "DelimitedTextReadSettings"
+								}
+							},
+							"sink": {
+								"type": "DelimitedTextSink",
+								"storeSettings": {
+									"type": "AzureBlobStorageWriteSettings"
+								},
+								"formatSettings": {
+									"type": "DelimitedTextWriteSettings",
+									"quoteAllText": true,
+									"fileExtension": ".txt"
+								}
+							},
+							"enableStaging": false,
+							"translator": {
+								"type": "TabularTranslator",
+								"typeConversion": true,
+								"typeConversionSettings": {
+									"allowDataTruncation": true,
+									"treatBooleanAsNumber": false
+								}
+							}
+						},
+						"inputs": [
+							{
+								"referenceName": "csv_linux_stage",
+								"type": "DatasetReference"
+							}
+						],
+						"outputs": [
+							{
+								"referenceName": "csv_datalake",
+								"type": "DatasetReference",
+								"parameters": {
+									"conteiner": {
+										"value": "@activity('lookup_parameters').output.firstRow.parametros.conteiner",
+										"type": "Expression"
+									},
+									"nomearquivo": {
+										"value": "@activity('lookup_parameters').output.firstRow.parametros.nomearquivo",
+										"type": "Expression"
+									},
+									"extensao": {
+										"value": "@activity('lookup_parameters').output.firstRow.parametros.extensao",
+										"type": "Expression"
+									}
+								}
+							}
+						]
+					},
+					{
+						"name": "lookup_parameters",
+						"description": "Leitura de arquivo de parâmetros com variáveis que serão utilizadas no pipeline",
+						"type": "Lookup",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "1.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"source": {
+								"type": "JsonSource",
+								"storeSettings": {
+									"type": "AzureBlobStorageReadSettings",
+									"recursive": true,
+									"enablePartitionDiscovery": false
+								},
+								"formatSettings": {
+									"type": "JsonReadSettings"
+								}
+							},
+							"dataset": {
+								"referenceName": "json_parametros",
+								"type": "DatasetReference"
+							}
+						}
+					},
+					{
+						"name": "csv_raw_to_bronze",
+						"description": "Ingestão arquivo .csv da camada Raw para a camada Bronze no formato delta",
+						"type": "DatabricksNotebook",
+						"dependsOn": [
+							{
+								"activity": "copy_file_stage_to_raw_data",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"policy": {
+							"timeout": "1.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"notebookPath": "/Users/brunopiuu@hotmail.com/ingest_cvs_raw_to_bronze",
+							"baseParameters": {
+								"odate": {
+									"value": "@formatDateTime(utcnow(), 'yyyyMMdd')",
+									"type": "Expression"
+								}
+							}
+						},
+						"linkedServiceName": {
+							"referenceName": "[parameters('ingestion_csv_raw_to_bronze_parquet')]",
+							"type": "LinkedServiceReference"
+						}
+					}
+				],
+				"folder": {
+					"name": "ingestao_raw_data"
+				},
+				"annotations": [],
+				"lastPublishTime": "2024-01-26T22:56:24Z"
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/datasets/csv_linux_stage')]",
+				"[concat(variables('factoryId'), '/datasets/csv_datalake')]",
+				"[concat(variables('factoryId'), '/datasets/json_parametros')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/csv_linux_stage')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "[parameters('FileServerLinuxStage')]",
+					"type": "LinkedServiceReference"
+				},
+				"folder": {
+					"name": "Dados_externos"
+				},
+				"annotations": [],
+				"type": "DelimitedText",
+				"typeProperties": {
+					"location": {
+						"type": "FileServerLocation",
+						"fileName": {
+							"value": "@concat(\n\n'EFIN_RETIF_R4010_',\n\nformatDateTime(utcnow(), 'yyyyMMdd'),\n\n'.csv'\n\n    )",
+							"type": "Expression"
+						}
+					},
+					"columnDelimiter": ";",
+					"escapeChar": "\\",
+					"firstRowAsHeader": true,
+					"quoteChar": "\""
+				},
+				"schema": []
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/csv_datalake')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "[parameters('AzureBlobStorageRawData')]",
+					"type": "LinkedServiceReference"
+				},
+				"parameters": {
+					"conteiner": {
+						"type": "string"
+					},
+					"nomearquivo": {
+						"type": "string"
+					},
+					"extensao": {
+						"type": "string"
+					}
+				},
+				"folder": {
+					"name": "Dados_internos"
+				},
+				"annotations": [],
+				"type": "DelimitedText",
+				"typeProperties": {
+					"location": {
+						"type": "AzureBlobStorageLocation",
+						"fileName": {
+							"value": "@concat(\n    \ndataset().nomearquivo,\n\nformatDateTime(utcnow(), 'yyyyMMdd'),\n\ndataset().extensao\n\n)",
+							"type": "Expression"
+						},
+						"container": {
+							"value": "@dataset().conteiner",
+							"type": "Expression"
+						}
+					},
+					"columnDelimiter": ";",
+					"escapeChar": "\\",
+					"firstRowAsHeader": true,
+					"quoteChar": "\""
+				},
+				"schema": []
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/json_parametros')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "[parameters('AzureBlobStorageRawData')]",
+					"type": "LinkedServiceReference"
+				},
+				"folder": {
+					"name": "Dados_internos"
+				},
+				"annotations": [],
+				"type": "Json",
+				"typeProperties": {
+					"location": {
+						"type": "AzureBlobStorageLocation",
+						"fileName": "parametros_extracao.json",
+						"container": "config"
+					}
+				},
+				"schema": {
+					"type": "object",
+					"properties": {
+						"parametros": {
+							"type": "object",
+							"properties": {
+								"container": {
+									"type": "string"
+								},
+								"diretorio": {
+									"type": "string"
+								},
+								"nomearquivo": {
+									"type": "string"
+								}
+							}
+						}
+					}
+				}
+			},
+			"dependsOn": []
+		}
+	]
+}
