@@ -77,6 +77,10 @@
 							"extensao": {
 								"value": "@activity('lookup_parameters').output.firstRow.parametros.extensao",
 								"type": "Expression"
+							},
+							"odate": {
+								"value": "@activity('lookup_parameters').output.firstRow.parametros.odate",
+								"type": "Expression"
 							}
 						}
 					}
