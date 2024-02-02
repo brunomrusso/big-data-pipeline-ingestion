@@ -5,6 +5,11 @@
 			"referenceName": "FileServerLinuxStage",
 			"type": "LinkedServiceReference"
 		},
+		"parameters": {
+			"odate": {
+				"type": "string"
+			}
+		},
 		"folder": {
 			"name": "Dados_externos"
 		},
@@ -14,7 +19,7 @@
 			"location": {
 				"type": "FileServerLocation",
 				"fileName": {
-					"value": "@concat(\n\n'EFIN_RETIF_R4010_',\n\nformatDateTime(utcnow(), 'yyyyMMdd'),\n\n'.csv'\n\n    )",
+					"value": "@concat(\n\n'EFIN_RETIF_R4010_',\n\ndataset().odate,\n\n'.csv'\n\n    )",
 					"type": "Expression"
 				}
 			},
