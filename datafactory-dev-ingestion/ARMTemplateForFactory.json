@@ -192,7 +192,7 @@
 							"notebookPath": "/Users/brunopiuu@hotmail.com/ingest_cvs_raw_to_bronze",
 							"baseParameters": {
 								"odate": {
-									"value": "@formatDateTime(utcnow(), 'yyyyMMdd')",
+									"value": "@activity('lookup_parameters').output.firstRow.parametros.odate",
 									"type": "Expression"
 								}
 							}
