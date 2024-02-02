@@ -23,13 +23,16 @@
 				"parametros": {
 					"type": "object",
 					"properties": {
-						"container": {
-							"type": "string"
-						},
-						"diretorio": {
+						"conteiner": {
 							"type": "string"
 						},
 						"nomearquivo": {
+							"type": "string"
+						},
+						"odate": {
+							"type": "string"
+						},
+						"extensao": {
 							"type": "string"
 						}
 					}
