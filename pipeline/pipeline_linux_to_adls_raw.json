@@ -153,6 +153,10 @@
 						"odate": {
 							"value": "@activity('lookup_parameters').output.firstRow.parametros.odate",
 							"type": "Expression"
+						},
+						"table_name": {
+							"value": "@activity('lookup_parameters').output.firstRow.parametros.table_name",
+							"type": "Expression"
 						}
 					}
 				},
