@@ -107,6 +107,10 @@
 									"odate": {
 										"value": "@activity('lookup_parameters').output.firstRow.parametros.odate",
 										"type": "Expression"
+									},
+									"table_name": {
+										"value": "@activity('lookup_parameters').output.firstRow.parametros.table_name",
+										"type": "Expression"
 									}
 								}
 							}
@@ -120,8 +124,8 @@
 										"value": "@activity('lookup_parameters').output.firstRow.parametros.conteiner",
 										"type": "Expression"
 									},
-									"nomearquivo": {
-										"value": "@activity('lookup_parameters').output.firstRow.parametros.nomearquivo",
+									"table_name": {
+										"value": "@activity('lookup_parameters').output.firstRow.parametros.table_name",
 										"type": "Expression"
 									},
 									"extensao": {
@@ -194,6 +198,10 @@
 								"odate": {
 									"value": "@activity('lookup_parameters').output.firstRow.parametros.odate",
 									"type": "Expression"
+								},
+								"table_name": {
+									"value": "@activity('lookup_parameters').output.firstRow.parametros.table_name",
+									"type": "Expression"
 								}
 							}
 						},
@@ -205,6 +213,11 @@
 				],
 				"policy": {
 					"elapsedTimeMetric": {}
+				},
+				"variables": {
+					"table_name": {
+						"type": "String"
+					}
 				},
 				"folder": {
 					"name": "ingestao_raw_data"
@@ -232,7 +245,7 @@
 					"conteiner": {
 						"type": "string"
 					},
-					"nomearquivo": {
+					"table_name": {
 						"type": "string"
 					},
 					"extensao": {
@@ -251,7 +264,11 @@
 					"location": {
 						"type": "AzureBlobStorageLocation",
 						"fileName": {
-							"value": "@concat(\n    \ndataset().nomearquivo,\n\ndataset().odate,\n\ndataset().extensao\n\n)",
+							"value": "@concat(\n    \ndataset().table_name,\n\n'_',\n\ndataset().odate,\n\ndataset().extensao\n\n)",
+							"type": "Expression"
+						},
+						"folderPath": {
+							"value": "@dataset().table_name",
 							"type": "Expression"
 						},
 						"container": {
@@ -282,6 +299,9 @@
 				"parameters": {
 					"odate": {
 						"type": "string"
+					},
+					"table_name": {
+						"type": "string"
 					}
 				},
 				"folder": {
@@ -293,7 +313,7 @@
 					"location": {
 						"type": "FileServerLocation",
 						"fileName": {
-							"value": "@concat(\n\n'EFIN_RETIF_R4010_',\n\ndataset().odate,\n\n'.csv'\n\n    )",
+							"value": "@concat(\n\ndataset().table_name,\n\n'_',\n\ndataset().odate,\n\n'.csv'\n\n    )",
 							"type": "Expression"
 						}
 					},
@@ -338,7 +358,7 @@
 								"conteiner": {
 									"type": "string"
 								},
-								"nomearquivo": {
+								"table_name": {
 									"type": "string"
 								},
 								"odate": {
