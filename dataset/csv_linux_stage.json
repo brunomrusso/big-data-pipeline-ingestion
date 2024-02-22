@@ -8,6 +8,9 @@
 		"parameters": {
 			"odate": {
 				"type": "string"
+			},
+			"table_name": {
+				"type": "string"
 			}
 		},
 		"folder": {
@@ -19,7 +22,7 @@
 			"location": {
 				"type": "FileServerLocation",
 				"fileName": {
-					"value": "@concat(\n\n'EFIN_RETIF_R4010_',\n\ndataset().odate,\n\n'.csv'\n\n    )",
+					"value": "@concat(\n\ndataset().table_name,\n\n'_',\n\ndataset().odate,\n\n'.csv'\n\n    )",
 					"type": "Expression"
 				}
 			},

@@ -158,6 +158,11 @@
 				}
 			}
 		],
+		"variables": {
+			"table_name": {
+				"type": "String"
+			}
+		},
 		"folder": {
 			"name": "ingestao_raw_data"
 		},
