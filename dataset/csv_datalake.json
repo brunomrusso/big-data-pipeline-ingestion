@@ -9,7 +9,7 @@
 			"conteiner": {
 				"type": "string"
 			},
-			"nomearquivo": {
+			"table_name": {
 				"type": "string"
 			},
 			"extensao": {
@@ -28,7 +28,7 @@
 			"location": {
 				"type": "AzureBlobStorageLocation",
 				"fileName": {
-					"value": "@concat(\n    \ndataset().nomearquivo,\n\ndataset().odate,\n\ndataset().extensao\n\n)",
+					"value": "@concat(\n    \ndataset().table_name,\n\n'_',\n\ndataset().odate,\n\ndataset().extensao\n\n)",
 					"type": "Expression"
 				},
 				"container": {
