@@ -31,6 +31,10 @@
 					"value": "@concat(\n    \ndataset().table_name,\n\n'_',\n\ndataset().odate,\n\ndataset().extensao\n\n)",
 					"type": "Expression"
 				},
+				"folderPath": {
+					"value": "@dataset().table_name",
+					"type": "Expression"
+				},
 				"container": {
 					"value": "@dataset().conteiner",
 					"type": "Expression"
