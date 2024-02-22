@@ -26,7 +26,7 @@
 						"conteiner": {
 							"type": "string"
 						},
-						"nomearquivo": {
+						"table_name": {
 							"type": "string"
 						},
 						"odate": {
