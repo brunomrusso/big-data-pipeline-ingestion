@@ -1,0 +1,9 @@
+{
+	"name": "validate_variables",
+	"properties": {
+		"folder": {
+			"name": "ingestao_raw_data"
+		},
+		"annotations": []
+	}
+}
