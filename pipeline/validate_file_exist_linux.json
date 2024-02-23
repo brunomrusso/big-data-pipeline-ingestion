@@ -84,6 +84,14 @@
 				"type": "string"
 			}
 		},
+		"variables": {
+			"odate": {
+				"type": "String"
+			},
+			"odate_": {
+				"type": "Array"
+			}
+		},
 		"folder": {
 			"name": "ingestao_raw_data"
 		},

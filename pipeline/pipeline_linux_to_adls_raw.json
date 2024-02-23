@@ -211,6 +211,12 @@
 		"variables": {
 			"table_name": {
 				"type": "String"
+			},
+			"odate": {
+				"type": "String"
+			},
+			"odate_": {
+				"type": "Array"
 			}
 		},
 		"folder": {
