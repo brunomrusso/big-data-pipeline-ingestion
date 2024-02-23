@@ -65,7 +65,10 @@
 							"dependsOn": [],
 							"userProperties": [],
 							"typeProperties": {
-								"message": "Arquivo nao encontrado",
+								"message": {
+									"value": "@concat('Arquivo ', pipeline().parameters.table_name, \n'_', pipeline().parameters.odate, '.csv não localizado no servidor linux')",
+									"type": "Expression"
+								},
 								"errorCode": "100"
 							}
 						}
