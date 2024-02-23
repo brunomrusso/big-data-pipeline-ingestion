@@ -8,7 +8,7 @@
 				"type": "Copy",
 				"dependsOn": [
 					{
-						"activity": "Execute Pipeline1",
+						"activity": "validate_csv_source",
 						"dependencyConditions": [
 							"Succeeded"
 						]
@@ -166,7 +166,7 @@
 				}
 			},
 			{
-				"name": "Execute Pipeline1",
+				"name": "validate_csv_source",
 				"type": "ExecutePipeline",
 				"dependsOn": [
 					{
@@ -190,7 +190,17 @@
 						"referenceName": "validate_file_exist_linux",
 						"type": "PipelineReference"
 					},
-					"waitOnCompletion": true
+					"waitOnCompletion": true,
+					"parameters": {
+						"odate": {
+							"value": "@activity('lookup_parameters').output.firstRow.parametros.odate",
+							"type": "Expression"
+						},
+						"table_name": {
+							"value": "@activity('lookup_parameters').output.firstRow.parametros.table_name",
+							"type": "Expression"
+						}
+					}
 				}
 			}
 		],
