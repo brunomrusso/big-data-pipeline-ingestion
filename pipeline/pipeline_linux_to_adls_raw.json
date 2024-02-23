@@ -67,10 +67,6 @@
 							"table_name": {
 								"value": "@activity('lookup_parameters').output.firstRow.parametros.table_name",
 								"type": "Expression"
-							},
-							"conteiner": {
-								"value": "@activity('lookup_parameters').output.firstRow.parametros.conteiner",
-								"type": "Expression"
 							}
 						}
 					}

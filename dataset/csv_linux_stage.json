@@ -11,12 +11,6 @@
 			},
 			"table_name": {
 				"type": "string"
-			},
-			"conteiner": {
-				"type": "string"
-			},
-			"extensao": {
-				"type": "string"
 			}
 		},
 		"folder": {
