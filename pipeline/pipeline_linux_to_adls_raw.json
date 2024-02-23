@@ -8,7 +8,7 @@
 				"type": "Copy",
 				"dependsOn": [
 					{
-						"activity": "lookup_parameters",
+						"activity": "Execute Pipeline1",
 						"dependencyConditions": [
 							"Succeeded"
 						]
@@ -163,6 +163,34 @@
 				"linkedServiceName": {
 					"referenceName": "ingestion_csv_raw_to_bronze_parquet",
 					"type": "LinkedServiceReference"
+				}
+			},
+			{
+				"name": "Execute Pipeline1",
+				"type": "ExecutePipeline",
+				"dependsOn": [
+					{
+						"activity": "lookup_parameters",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"secureInput": false
+				},
+				"userProperties": [
+					{
+						"name": "odate",
+						"value": "@activity('lookup_parameters').output.firstRow.parametros.odate"
+					}
+				],
+				"typeProperties": {
+					"pipeline": {
+						"referenceName": "validate_file_exist_linux",
+						"type": "PipelineReference"
+					},
+					"waitOnCompletion": true
 				}
 			}
 		],
